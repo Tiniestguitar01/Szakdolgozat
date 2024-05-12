@@ -11,8 +11,6 @@ public class Layer
     private List<Node> nodes;
     [SerializeField]
     private float[] outputs;
-    [SerializeField]
-    private float[] inputs;
 
     public Layer(int numberOfNodes) 
     {
@@ -25,27 +23,31 @@ public class Layer
         outputs = new float[numberOfNodes];
     }
 
-    public float[] CalculateOutput()
+    public float[] CalculateOutput(Layer layer)
     {
-        for(int i = 0; i < nodes.Count; i++)
+        outputs = new float[nodes.Count];
+        for (int i = 0; i < nodes.Count; i++)
         {
-            for (int j = 0; j < inputs.Length; j++)
+            float output = 0;
+            for (int j = 0; j < layer.GetOutputs().Length; j++)
             {
-                outputs[i] = ActivationFunction(nodes[i].GetWeight() * inputs[j] + nodes[i].GetBias());
+                output += (layer.nodes[j].GetWeight() * layer.GetOutputs()[j]) + nodes[i].GetBias();
             }
+            outputs[i] = ActivationFunction(output);
         }
 
         return outputs;
     }
 
-    public float[] GetInputs()
+    public float[] GetOutputs()
     {
-        return inputs;
+        return outputs;
     }
 
-    public void SetInputs(float[] inputs)
+
+    public void SetOutputs(float[] outputs)
     {
-        this.inputs = inputs;
+        this.outputs = outputs;
     }
 
     public List<Node> GetNodes()

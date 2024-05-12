@@ -24,25 +24,24 @@ public class Network
         }*/
 
         Layer startLayer = new Layer(numberOfNodes[0]);
-        startLayer.SetInputs(new float[] { 0f, 0f });
+        startLayer.SetOutputs(new float[] { 0f, 0f });
         layers.Add(startLayer);
 
         for (int i = 1; i < numberOfNodes.Length; i++)
         {
             Layer layer = new Layer(numberOfNodes[i]);
-            layer.SetInputs(layers[i - 1].CalculateOutput());
             layers.Add(layer);
         }
+        Calculate();
     }
 
-    public void ReCalculate()
+    public void Calculate()
     {
-        layers[0].CalculateOutput();
+        layers[1].CalculateOutput(layers[0]);
 
-        for (int i = 1; i < layers.Count; i++)
+        for (int i = 2; i < layers.Count; i++)
         {
-            layers[i].SetInputs(layers[i - 1].CalculateOutput());
-            layers[i].CalculateOutput();
+            layers[i].CalculateOutput(layers[i - 1]);
         }
     }
 

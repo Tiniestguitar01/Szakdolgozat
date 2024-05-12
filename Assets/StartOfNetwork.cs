@@ -6,12 +6,19 @@ using UnityEngine;
 
 public class StartOfNetwork : MonoBehaviour
 {
-    
+    [SerializeField]
     Network network;
+
     void Start()
     {
-        network = new Network(new int[] { 3, 4, 5, 3, 2, 2 });
+        network = new Network(new int[] { 2, 3, 2 });
     }
+
+    private void Update()
+    {
+        OnDrawGizmos();
+    }
+
 
     private void OnDrawGizmos()
     {

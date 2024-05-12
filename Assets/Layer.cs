@@ -4,15 +4,18 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
+[System.Serializable]
 public class Layer
 {
+    [SerializeField]
     private List<Node> nodes;
+    [SerializeField]
     private float[] outputs;
+    [SerializeField]
     private float[] inputs;
 
-    public Layer(float[] inputs, int numberOfNodes) 
+    public Layer(int numberOfNodes) 
     {
-        this.inputs = inputs;
         nodes = new List<Node>();
         for (int i = 0; i < numberOfNodes; i++)
         {
@@ -28,7 +31,7 @@ public class Layer
         {
             for (int j = 0; j < inputs.Length; j++)
             {
-                outputs[i] = nodes[i].ActivationFunction(nodes[i].GetWeight() * inputs[j] + nodes[i].GetBias());
+                outputs[i] = ActivationFunction(nodes[i].GetWeight() * inputs[j] + nodes[i].GetBias());
             }
         }
 
@@ -40,9 +43,18 @@ public class Layer
         return inputs;
     }
 
+    public void SetInputs(float[] inputs)
+    {
+        this.inputs = inputs;
+    }
+
     public List<Node> GetNodes()
     {
         return nodes;
+    }
+    public float ActivationFunction(float input)
+    {
+        return 1 / (1 + Mathf.Exp(-input));
     }
 
 }

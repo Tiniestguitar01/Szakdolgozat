@@ -5,11 +5,15 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Windows;
 
+[System.Serializable]
 public class Node
 {
+    [SerializeField]
+    [Range(-1f,1f)]
     private float weight;
+    [SerializeField]
+    [Range(-1f, 1f)]
     private float bias;
-    private float output;
 
     public Node()
     {
@@ -35,12 +39,6 @@ public class Node
     public float GetBias()
     {
         return bias;
-    }
-
-    public float ActivationFunction(float input)
-    {
-        output = 1 / (1+ Mathf.Exp(-input));
-        return output;
     }
 
 }

@@ -10,20 +10,25 @@ public class Node
 {
     [SerializeField]
     [Range(-1f,1f)]
-    private float weight;
+    private float[] weights;
     [SerializeField]
     [Range(-1f, 1f)]
     private float bias;
 
-    public Node()
+    public Node(int inputNumber)
     {
-        this.weight = InitWeight();
+        this.weights = InitWeight(inputNumber);
         this.bias = InitBias();
     }
 
-    public float InitWeight()
+    public float[] InitWeight(int inputNumber)
     {
-        return Random.Range(-1f,1f);
+        weights = new float[inputNumber];
+        for (int i = 0; i < inputNumber; i++)
+        {
+            weights[i]= Random.Range(-1f, 1f);
+        }
+        return weights;
     }
 
     public float InitBias()
@@ -31,9 +36,9 @@ public class Node
         return Random.Range(-1f, 1f);
     }
 
-    public float GetWeight()
+    public float[] GetWeight()
     {
-        return weight;
+        return weights;
     }
 
     public float GetBias()

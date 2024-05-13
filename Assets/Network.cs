@@ -17,19 +17,14 @@ public class Network
     public void NetworkInit(int[] numberOfNodes)
     {
         layers = new List<Layer>();
-        /*float[] inputs = new float[numberOfNodes[0]];
-        for (int i = 0; i < numberOfNodes[0]; i++)
-        {
-            inputs[i] = Random.Range(-1f,1f);
-        }*/
 
-        Layer startLayer = new Layer(numberOfNodes[0]);
-        startLayer.SetOutputs(new float[] { 0f, 0f });
+        Layer startLayer = new Layer(numberOfNodes[0], numberOfNodes[0]);
+        startLayer.SetInputs(new float[] { 0f, 0f });
         layers.Add(startLayer);
 
         for (int i = 1; i < numberOfNodes.Length; i++)
         {
-            Layer layer = new Layer(numberOfNodes[i]);
+            Layer layer = new Layer(numberOfNodes[i], numberOfNodes[i - 1]);
             layers.Add(layer);
         }
         Calculate();
@@ -37,11 +32,16 @@ public class Network
 
     public void Calculate()
     {
-        layers[1].CalculateOutput(layers[0]);
-
-        for (int i = 2; i < layers.Count; i++)
+        for (int i = 0; i < layers.Count; i++)
         {
-            layers[i].CalculateOutput(layers[i - 1]);
+            if (i != layers.Count - 1)
+            {
+                layers[i].CalculateOutput(layers[i + 1]);
+            }
+            else
+            {
+                layers[i].CalculateOutput(layers[i]);
+            }
         }
     }
 

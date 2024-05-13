@@ -11,7 +11,7 @@ public class StartOfNetwork : MonoBehaviour
 
     void Start()
     {
-        network = new Network(new int[] { 2, 2, 2 });
+        network = new Network(new int[] { 2, 3, 2 });
     }
 
     private void Update()
@@ -42,24 +42,22 @@ public class StartOfNetwork : MonoBehaviour
        }
 
 
-        for (float i = 0; i < 100; i+=1f)
+        for (float i = -50; i < 50; i+=1f)
         {
-            for (float j = 0; j < 100; j+=1f)
+            for (float j = -50; j < 50; j+=1f)
             {
-                network.GetLayers()[0].SetOutputs(new float[] { i, j });
+                network.GetLayers()[0].SetInputs(new float[] { j, i });
                 network.Calculate();
-                Gizmos.color = Color.white;
                 Layer lastLayer = network.GetLayers()[network.GetLayers().Count - 1];
-                Layer beforeLastLayer = network.GetLayers()[network.GetLayers().Count - 2];
-                if (lastLayer.CalculateOutput(beforeLastLayer)[0] > lastLayer.CalculateOutput(beforeLastLayer)[1])
-                {
-                    Gizmos.color = Color.red;
-                }
-                else
+                if (lastLayer.GetOutputs()[0] > lastLayer.GetOutputs()[1])
                 {
                     Gizmos.color = Color.blue;
                 }
-                Gizmos.DrawSphere(new Vector3(i, j, 0), 0.5f);
+                else
+                {
+                    Gizmos.color = Color.red;
+                }
+                Gizmos.DrawSphere(new Vector3(j, i, 0), 0.5f);
             }
         }
     }

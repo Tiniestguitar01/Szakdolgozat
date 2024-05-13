@@ -11,30 +11,33 @@ public class Layer
     private List<Node> nodes;
     [SerializeField]
     private float[] outputs;
+    [SerializeField]
+    private float[] inputs;
 
-    public Layer(int numberOfNodes) 
+    public Layer(int numberOfNodes, int incomingNodes) 
     {
         nodes = new List<Node>();
         for (int i = 0; i < numberOfNodes; i++)
         {
-            Node node = new Node();
+            Node node = new Node(incomingNodes);
             nodes.Add(node);
         }
-        outputs = new float[numberOfNodes];
     }
 
     public float[] CalculateOutput(Layer layer)
     {
         outputs = new float[nodes.Count];
-        for (int i = 0; i < nodes.Count; i++)
+        for (int i = 0; i < GetNodes().Count; i++)
         {
-            float output = 0;
-            for (int j = 0; j < layer.GetOutputs().Length; j++)
+            float output = GetNodes()[i].GetBias();
+            for(int k = 0; k < GetNodes()[i].GetWeight().Length; k++)
             {
-                output += (layer.nodes[j].GetWeight() * layer.GetOutputs()[j]) + nodes[i].GetBias();
+                output += (GetNodes()[i].GetWeight()[k] * GetInputs()[k]);
             }
             outputs[i] = ActivationFunction(output);
         }
+
+        GiveOutput(layer);
 
         return outputs;
     }
@@ -44,10 +47,25 @@ public class Layer
         return outputs;
     }
 
+    public void GiveOutput(Layer layer)
+    {
+        layer.SetInputs(outputs);
+    }
+
 
     public void SetOutputs(float[] outputs)
     {
         this.outputs = outputs;
+    }
+
+    public float[] GetInputs()
+    {
+        return inputs;
+    }
+
+    public void SetInputs(float[] inputs)
+    {
+        this.inputs = inputs;
     }
 
     public List<Node> GetNodes()

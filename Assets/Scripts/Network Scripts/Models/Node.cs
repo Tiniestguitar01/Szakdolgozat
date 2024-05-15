@@ -12,7 +12,7 @@ public class Node
     [Range(-1f,1f)]
     private float[] weights;
     [SerializeField]
-    [Range(-1f, 1f)]
+    [Range(-20f, 20f)]
     private float bias;
 
     public Node(int inputNumber)
@@ -24,16 +24,16 @@ public class Node
     public float[] InitWeight(int inputNumber)
     {
         weights = new float[inputNumber];
-        for (int i = 0; i < inputNumber; i++)
+        for (int weight = 0; weight < inputNumber; weight++)
         {
-            weights[i]= Random.Range(-1f, 1f);
+            weights[weight] = Random.Range(-1f, 1f);
         }
         return weights;
     }
 
     public float InitBias()
     {
-        return Random.Range(-1f, 1f);
+        return Random.Range(-20f, 20f);
     }
 
     public float[] GetWeight()

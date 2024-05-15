@@ -22,19 +22,27 @@ public class Layer
             Node node = new Node(incomingNodes);
             nodes.Add(node);
         }
+        outputs = new float[nodes.Count];
     }
 
-    public float[] CalculateOutput(Layer layer)
+    public float[] CalculateOutput(Layer layer,int layerNumber)
     {
         outputs = new float[nodes.Count];
-        for (int i = 0; i < GetNodes().Count; i++)
+        for (int node = 0; node < GetNodes().Count; node++)
         {
-            float output = GetNodes()[i].GetBias();
-            for(int k = 0; k < GetNodes()[i].GetWeight().Length; k++)
+            float output = GetNodes()[node].GetBias();
+            for(int weight = 0; weight < GetNodes()[node].GetWeight().Length; weight++)
             {
-                output += (GetNodes()[i].GetWeight()[k] * GetInputs()[k]);
+                output += (GetNodes()[node].GetWeight()[weight] * GetInputs()[weight]);
             }
-            outputs[i] = ActivationFunction(output);
+            if(layerNumber != 0)
+            {
+                outputs[node] = ActivationFunction(output);
+            }
+            else
+            {
+                outputs[node] = output;
+            }
         }
 
         GiveOutput(layer);
@@ -74,7 +82,9 @@ public class Layer
     }
     public float ActivationFunction(float input)
     {
-        return 1 / (1 + Mathf.Exp(-input));
+        //return input > 0 ? input : 0;
+        // return 1 / (1 + Mathf.Exp(-input));
+        return input / (1 + Mathf.Exp(-input));
     }
 
 }

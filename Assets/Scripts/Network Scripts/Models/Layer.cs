@@ -35,14 +35,14 @@ public class Layer
             {
                 output += (GetNodes()[node].GetWeight()[weight] * GetInputs()[weight]);
             }
-            if(layerNumber != 0)
+            //if(layerNumber != 0)
             {
                 outputs[node] = ActivationFunction(output);
             }
-            else
-            {
-                outputs[node] = output;
-            }
+            //else
+            //{
+            //    outputs[node] = output;
+            //}
         }
 
         GiveOutput(layer);

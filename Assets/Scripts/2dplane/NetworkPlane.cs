@@ -18,7 +18,7 @@ public class NetworkPlane : MonoBehaviour
     public GameObject circle;
     public GameObject good;
 
-    SpriteRenderer[,] circles;
+    SpriteRenderer[] circles;
 
     public TMP_Text costText;
 
@@ -27,25 +27,12 @@ public class NetworkPlane : MonoBehaviour
         network = new Network(nodes);
         data = new List<Data>();
 
-        circles = new SpriteRenderer[50, 50];
-
-        for (int x = 0; x < 50; x++)
-        {
-            for (int y = 0; y < 50; y++)
-            {
-                GameObject gameObject = Instantiate(circle);
-                gameObject.transform.position = new Vector3(x, y, 0);
-                circles[x, y] = gameObject.GetComponent<SpriteRenderer>();
-            }
-        }
-
-
         //made up data
         for (int x = 0; x < 50; x++)
         {
             for (int y = 0; y < 50; y++)
             {
-                if(x <= 20 && y <= 20)
+                if (x <= 20 && y <= 20)
                 {
                     data.Add(new Data(x, y, new float[] { 1, 0 }));
                     //Instantiate(good,new Vector3(x,y,0),Quaternion.identity);
@@ -55,6 +42,16 @@ public class NetworkPlane : MonoBehaviour
                     data.Add(new Data(x, y, new float[] { 0, 1 }));
                 }
             }
+        }
+
+        circles = new SpriteRenderer[data.Count];
+
+
+        for (int i = 0; i < data.Count; i++)
+        {
+            GameObject gameObject = Instantiate(circle);
+            gameObject.transform.position = new Vector3(data[i].GetX(), data[i].GetY(), 0);
+            circles[i] = gameObject.GetComponent<SpriteRenderer>();
         }
 
         cost = new Cost(network,data);
@@ -68,23 +65,19 @@ public class NetworkPlane : MonoBehaviour
 
     private void Update()
     {
-
-        for (int x = 0; x < 50; x++)
+        for (int i = 0; i < data.Count; i++)
         {
-            for (int y = 0; y < 50; y++)
+            network.SetStartValue(new float[] { data[i].GetX(), data[i].GetY() });
+            if (network.GetNetworkOutputs()[0] > network.GetNetworkOutputs()[1])
             {
-                network.SetStartValue(new float[] { x, y });
-
-                if (network.GetNetworkOutputs()[0] > network.GetNetworkOutputs()[1])
-                {
-                    circles[x, y].color = Color.blue;
-                }
-                else
-                {
-                    circles[x, y].color = Color.red;
-                }
+                circles[i].color = Color.blue;
+            }
+            else
+            {
+                circles[i].color = Color.red;
             }
         }
+
         costText.text = "Cost: " + cost.GetAvgCost().ToString();
     }
 }

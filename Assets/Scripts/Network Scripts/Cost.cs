@@ -25,14 +25,15 @@ public class Cost
         return error * error;
     }
 
-    public float GetLoss(float[] expected)
+    public float GetLoss(Data data)
     {
+        network.SetStartValue(new float[] { data.GetX(), data.GetY() });
         float[] outputs = network.GetNetworkOutputs();
 
         float loss = 0;
         for (int i = 0; i < outputs.Length; i++)
         {
-            loss += GetError(outputs[i], expected[i]);
+            loss += GetError(outputs[i], data.GetExpected()[i]);
         }
 
         return loss;
@@ -44,7 +45,7 @@ public class Cost
 
         for(int i = 0; i < data.Count;i++)
         {
-            cost += GetLoss(data[i].GetExpected());
+            cost += GetLoss(data[i]);
         }
 
         return cost / data.Count;

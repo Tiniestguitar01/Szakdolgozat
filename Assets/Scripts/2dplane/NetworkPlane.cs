@@ -32,10 +32,10 @@ public class NetworkPlane : MonoBehaviour
         {
             for (int y = 0; y < 50; y++)
             {
+
                 if (x <= 20 && y <= 20)
                 {
                     data.Add(new Data(x, y, new float[] { 1, 0 }));
-                    //Instantiate(good,new Vector3(x,y,0),Quaternion.identity);
                 }
                 else
                 {
@@ -54,6 +54,14 @@ public class NetworkPlane : MonoBehaviour
             circles[i] = gameObject.GetComponent<SpriteRenderer>();
         }
 
+        for (int i = 0; i < data.Count; i++)
+        {
+            if (data[i].GetX() <= 20 && data[i].GetY() <= 20)
+            {
+                Instantiate(good, new Vector3(data[i].GetX(), data[i].GetY(), 0), Quaternion.identity);
+            }
+        }
+
         cost = new Cost(network,data);
     }
 
@@ -61,6 +69,13 @@ public class NetworkPlane : MonoBehaviour
     {
         Serialize serialize = new Serialize(network);
         serialize.Save("NetworkTest");
+    }
+
+    public void Load()
+    {
+        Serialize serialize = new Serialize(network);
+        network = serialize.Load("NetworkTest");
+        cost = new Cost(network, data);
     }
 
     private void Update()

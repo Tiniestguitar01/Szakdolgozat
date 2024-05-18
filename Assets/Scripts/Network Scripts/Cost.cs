@@ -13,10 +13,14 @@ public class Cost
     [SerializeField]
     List<Data> data;
 
+    [SerializeField]
+    float[] allOutputIndexes;
+
     public Cost(Network network, List<Data> data)
     {
         this.network = network;
         this.data = data;
+        allOutputIndexes = new float[data.Count];
     }
 
     public float GetError(float value, float expectedValue)
@@ -25,10 +29,13 @@ public class Cost
         return error * error;
     }
 
-    public float GetLoss(Data data)
+    public float GetLoss(Data data,int index)
     {
-        network.SetStartValue(new float[] { data.GetX(), data.GetY() });
+        float[] inputs = data.GetInputs();
+        network.SetStartValue(inputs);
         float[] outputs = network.GetNetworkOutputs();
+
+        allOutputIndexes[index] = network.GetMaxNetworkOutput();
 
         float loss = 0;
         for (int i = 0; i < outputs.Length; i++)
@@ -45,9 +52,16 @@ public class Cost
 
         for(int i = 0; i < data.Count;i++)
         {
-            cost += GetLoss(data[i]);
+            cost += GetLoss(data[i], i);
         }
 
         return cost / data.Count;
     }
+
+    public float[] GetAllOutputIndexes()
+    {
+        return allOutputIndexes;
+    }
+
+
 }

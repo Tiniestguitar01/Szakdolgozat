@@ -418,6 +418,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -692,7 +693,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2de7646d7171c9e43985b73449746e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes: 02000000030000000300000002000000
+  nodes: 020000000300000002000000
+  learnRate: 0.33
   network:
     layers: []
   data: []

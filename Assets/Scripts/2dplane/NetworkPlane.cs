@@ -9,6 +9,10 @@ public class NetworkPlane : MonoBehaviour
     private int[] nodes;
 
     [SerializeField]
+    [Range(-2f,2f)]
+    private float learnRate;
+
+    [SerializeField]
     Network network;
     Cost cost;
 
@@ -24,7 +28,7 @@ public class NetworkPlane : MonoBehaviour
 
     void Start()
     {
-        network = new Network(nodes);
+        network = new Network(nodes, learnRate);
         data = new List<Data>();
 
         //made up data
@@ -33,13 +37,13 @@ public class NetworkPlane : MonoBehaviour
             for (int y = 0; y < 50; y++)
             {
 
-                if (x <= 20 && y <= 20)
+                if (x < 20 && y < 20)
                 {
-                    data.Add(new Data(x, y, new float[] { 1, 0 }));
+                    data.Add(new Data(new float[] { x, y }, new float[] { 1, 0 }));
                 }
                 else
                 {
-                    data.Add(new Data(x, y, new float[] { 0, 1 }));
+                    data.Add(new Data(new float[] { x, y }, new float[] { 0, 1 }));
                 }
             }
         }
@@ -50,15 +54,15 @@ public class NetworkPlane : MonoBehaviour
         for (int i = 0; i < data.Count; i++)
         {
             GameObject gameObject = Instantiate(circle);
-            gameObject.transform.position = new Vector3(data[i].GetX(), data[i].GetY(), 0);
+            gameObject.transform.position = new Vector3(data[i].GetInputs()[0], data[i].GetInputs()[1], 0);
             circles[i] = gameObject.GetComponent<SpriteRenderer>();
         }
 
         for (int i = 0; i < data.Count; i++)
         {
-            if (data[i].GetX() <= 20 && data[i].GetY() <= 20)
+            if (data[i].GetExpected()[0] == 1)
             {
-                Instantiate(good, new Vector3(data[i].GetX(), data[i].GetY(), 0), Quaternion.identity);
+                Instantiate(good, new Vector3(data[i].GetInputs()[0], data[i].GetInputs()[1], 0), Quaternion.identity);
             }
         }
 
@@ -80,19 +84,21 @@ public class NetworkPlane : MonoBehaviour
 
     private void Update()
     {
-        for (int i = 0; i < data.Count; i++)
+        float[] allOutput = cost.GetAllOutputIndexes();
+
+        for (int i = 0; i < allOutput.Length; i++)
         {
-            network.SetStartValue(new float[] { data[i].GetX(), data[i].GetY() });
-            if (network.GetNetworkOutputs()[0] > network.GetNetworkOutputs()[1])
+            if (allOutput[i] == 0)
             {
                 circles[i].color = Color.blue;
             }
-            else
+            else if (allOutput[i] == 1)
             {
                 circles[i].color = Color.red;
             }
         }
 
         costText.text = "Cost: " + cost.GetAvgCost().ToString();
+        network.Learn(cost);
     }
 }

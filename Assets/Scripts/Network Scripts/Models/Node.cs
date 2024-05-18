@@ -15,10 +15,14 @@ public class Node
     [Range(-1f, 1f)]
     private float bias;
 
+    private float biasChange;
+    private float[] weightChanges;
+
     public Node(int inputNumber)
     {
         this.weights = InitWeight(inputNumber);
         this.bias = InitBias();
+        weightChanges = new float[weights.Length];
     }
 
     public float[] InitWeight(int inputNumber)
@@ -46,4 +50,29 @@ public class Node
         return bias;
     }
 
+    public void SetBias(float bias)
+    {
+        this.bias = bias;
+    }
+
+    public void SetBiasChange(float biasChange)
+    {
+        this.biasChange = biasChange;
+    }
+
+    public void SetWeightChange(float weightChange, int index)
+    {
+        this.weightChanges[index] = weightChange;
+    }
+
+
+    public void ChangeValues(float learnRate)
+    {
+        bias -= biasChange * learnRate;
+
+        for (int weight = 0; weight < weights.Length; weight++)
+        {
+            weights[weight] -= weightChanges[weight] * learnRate;
+        }
+    }
 }

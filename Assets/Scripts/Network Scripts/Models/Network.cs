@@ -10,9 +10,12 @@ public class Network
     [SerializeField]
     private List<Layer> layers;
 
-    public Network(int[] numberOfNodes)
+    private float learnRate;
+
+    public Network(int[] numberOfNodes,float learnRate)
     {
         NetworkInit(numberOfNodes);
+        this.learnRate = learnRate;
     }
 
     private void Calculate()
@@ -47,6 +50,44 @@ public class Network
         Calculate();
     }
 
+    public void Learn(Cost cost)
+    {
+        float change = 0.01f;
+
+        float currentCost = cost.GetAvgCost();
+
+        for(int layer = 1; layer < GetLayers().Count; layer++)
+        {
+            for(int node = 0; node < GetLayers()[layer].GetNodes().Count; node++)
+            {
+                Node currentNode = GetLayers()[layer].GetNodes()[node];
+
+                for(int weight = 0; weight < currentNode.GetWeight().Length; weight++)
+                {
+                    currentNode.GetWeight()[weight] += change;
+                    float changedCostW = cost.GetAvgCost() - currentCost;
+                    currentNode.GetWeight()[weight] -= change;
+                    currentNode.SetWeightChange(changedCostW / change, weight);
+                }
+
+                currentNode.SetBias(currentNode.GetBias() + change);
+                float changedCostB = cost.GetAvgCost() - currentCost;
+                currentNode.SetBias(currentNode.GetBias() - change);
+                currentNode.SetBiasChange(changedCostB / change);
+
+            }
+        }
+
+        for (int layer = 1; layer < GetLayers().Count; layer++)
+        {
+            for (int node = 0; node < GetLayers()[layer].GetNodes().Count; node++)
+            {
+                Node currentNode = GetLayers()[layer].GetNodes()[node];
+                currentNode.ChangeValues(learnRate);
+            }
+        }
+    }
+
     public void SetStartValue(float[] values)
     {
         GetLayers()[0].SetOutputs(values);
@@ -63,15 +104,15 @@ public class Network
     {
         int index = 0;
         float max = 0;
-        for(int i = 0; i < GetLayers()[GetLayers().Count - 1].GetOutputs().Length; i++)
+        float[] lastLayerOutputs = GetLayers()[GetLayers().Count - 1].GetOutputs();
+        for (int i = 0; i < lastLayerOutputs.Length; i++)
         {
-            if(max < GetLayers()[GetLayers().Count - 1].GetOutputs()[i])
+            if(max < lastLayerOutputs[i])
             {
-                max = GetLayers()[GetLayers().Count - 1].GetOutputs()[i];
+                max = lastLayerOutputs[i];
                 index = i;
             }
         }
-
         return index;
     }
 

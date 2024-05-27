@@ -11,7 +11,7 @@ public class StartOfNetwork : MonoBehaviour
 
     void Start()
     {
-        network = new Network(nodes,0.1f);
+        network = new Network(nodes);
     }
 
 

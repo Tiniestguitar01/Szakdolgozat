@@ -28,7 +28,7 @@ public class NetworkPlane : MonoBehaviour
 
     void Start()
     {
-        network = new Network(nodes, learnRate);
+        network = new Network(nodes);
         data = new List<Data>();
 
         //made up data
@@ -37,7 +37,7 @@ public class NetworkPlane : MonoBehaviour
             for (int y = 0; y < 50; y++)
             {
 
-                if (x < 20 && y < 20)
+                if (x < 50 && x > 35  && y > 40 && y < 50)
                 {
                     data.Add(new Data(new float[] { x, y }, new float[] { 1, 0 }));
                 }
@@ -99,6 +99,6 @@ public class NetworkPlane : MonoBehaviour
         }
 
         costText.text = "Cost: " + cost.GetAvgCost().ToString();
-        network.Learn(cost);
+        network.Learn(cost,learnRate);
     }
 }

@@ -694,7 +694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodes: 020000000300000002000000
-  learnRate: 0.33
+  learnRate: 0.23
   network:
     layers: []
   data: []

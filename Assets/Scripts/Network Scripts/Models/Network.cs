@@ -10,12 +10,9 @@ public class Network
     [SerializeField]
     private List<Layer> layers;
 
-    private float learnRate;
-
-    public Network(int[] numberOfNodes,float learnRate)
+    public Network(int[] numberOfNodes)
     {
         NetworkInit(numberOfNodes);
-        this.learnRate = learnRate;
     }
 
     private void Calculate()
@@ -50,9 +47,9 @@ public class Network
         Calculate();
     }
 
-    public void Learn(Cost cost)
+    public void Learn(Cost cost,float learnRate)
     {
-        float change = 0.01f;
+        float change = 0.001f;
 
         float currentCost = cost.GetAvgCost();
 
